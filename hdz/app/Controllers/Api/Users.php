@@ -48,7 +48,7 @@ class Users extends ResourceController
             return $api->output(implode(' ',array_values($validation->getErrors())), true);
         }else{
             $client = Services::client();
-            $client_id = $client->createAccount($this->request->getPost('fullname'), $this->request->getPost('email'),'', ($this->request->getPost('notify') == 1 ? true : false));
+            $client_id = $client->createAccount($this->request->getPost('fullname'), $this->request->getPost('email'),'', ($this->request->getPost('notify') == 1 ? true : false), $this->request->getPost('user_id'));
             return $api->output([
                 'user_id' => $client_id,
                 'message' => lang('Api.userCreated')

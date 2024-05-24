@@ -127,19 +127,30 @@ class Client
         return $client_id;
     }
 
-    public function createAccount($name, $email, $password='', $send_mail=true)
+    public function createAccount($name, $email, $password='', $send_mail=true, $user_id =false)
     {
         if($password == ''){
             $password = random_string('alnum', 16);
         }
         $name = ($name == '' ? $email : $name);
         $this->usersModel->protect(false);
-        $this->usersModel->insert([
-            'fullname' => esc($name),
-            'email' => esc($email),
-            'registration' => time(),
-            'password' => password_hash($password, PASSWORD_BCRYPT)
-        ]);
+        /// when user id is passed
+        if($user_id == false){
+            $this->usersModel->insert([
+                'fullname' => esc($name),
+                'email' => esc($email),
+                'registration' => time(),
+                'password' => password_hash($password, PASSWORD_BCRYPT)
+            ]);
+        }else{
+            $this->usersModel->insert([
+                'id' => esc($user_id),
+                'fullname' => esc($name),
+                'email' => esc($email),
+                'registration' => time(),
+                'password' => password_hash($password, PASSWORD_BCRYPT)
+            ]);
+        }
         $this->usersModel->protect(true);
         $client_id = $this->usersModel->getInsertID();
 
